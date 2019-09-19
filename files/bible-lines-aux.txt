@@ -1,0 +1,6 @@
+add
+byte
+cat
+bool
+ask
+aop
