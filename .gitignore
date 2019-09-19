@@ -1,1 +1,4 @@
 *.txt
+*.o
+*.depend
+*.layout
