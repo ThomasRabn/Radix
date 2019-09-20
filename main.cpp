@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <algorithm>
 
-#define RADIX 256
+#define RADIX 255
 
 
 ///**** Input ****///
@@ -20,6 +20,8 @@ void openFile(std::string nom, std::vector<unsigned int*>& tab);
 ///**** getByte ****///
 short int getByte(unsigned int elem, unsigned int i);
 short int getByte(std::string elem, unsigned int i);
+/*int get4bits(unsigned int elem, unsigned int i);
+int get2bytes(unsigned int elem, unsigned int i);*/
 
 ///**** getMaxLength ****///
 std::size_t getMaxLength(std::vector<unsigned int>& tab);
@@ -42,29 +44,23 @@ int main()
 	std::vector<unsigned int> tabInts;
 	openFile("files/ints.txt", tabInts);
 
-    std::vector<std::string*> tabText;
+    std::vector<std::string> tabText;
     openFile("files/bible-lines.txt", tabText);
 
     auto t_start = std::chrono::high_resolution_clock::now(); // Store the start time of the sorting algorithm
 
-    //std::sort(tabText.begin(), tabText.end());
+    //std::sort(tabInts.begin(), tabInts.end());
 
-    MSDRadixSort(tabText);
+    LSDRadixSort(tabText);
 
     auto t_end = std::chrono::high_resolution_clock::now(); // Store the end time
 
     /// Print the time of the sort
 	std::cout << "Sorting was : " << std::chrono::duration<double, std::milli>(t_end - t_start).count() / 1000 << " seconds long" << std::endl;
 
-//    std::thread strings (LSDRadixSort, std::ref(tabText));
-//    std::thread integers(LSDRadixSort, std::ref(tabInts));
-
-	for(const auto& elem : tabText) {
-        std::cout << *elem << std::endl;
-	}
-
-	//strings.join();
-	//integers.join();
+	/*for(const auto& elem : tabInts) {
+        std::cout << elem << std::endl;
+	}*/
 
 	return 0;
 }
@@ -132,14 +128,24 @@ void openFile(std::string nom, std::vector<unsigned int*>& tab) {
 
 ///**** Returns the byte i of elem ; return a special velue if i is larger than the number of bytes of elem ****///
 short int getByte(unsigned int elem, unsigned int i) {
-	if (sizeof(elem) > i) { return (elem >> ((3 - i) * 8) & 255); }
+	if (sizeof(elem) > i)   { return (elem >> ((3-i)*8)&(255)); }
 	else return -1;
 }
 
 short int getByte(std::string elem, unsigned int i) {
-	if (elem.size() > i) { return elem[i]; }
+	if (elem.size() > i)    { return elem[i]; }
 	else return -1;
 }
+
+/*int get4bits(unsigned int elem, unsigned int i) {
+    if(sizeof(elem)*2 > i)  { return (elem >> ((7-i)*4)&(15)); }
+    else return -1;
+}
+
+int get2bytes(unsigned int elem, unsigned int i) {
+    if(sizeof(elem)/2 > i)  { return (elem >> ((1-i)*16)&(65535)); }
+    else return -1;
+}*/
 ///************************************************************************************************************///
 
 
@@ -179,7 +185,7 @@ template<typename T> void LSDRadixSort(std::vector<T*>& tab) {
 	/// Counting sort
 	for (int digit = maxLength - 1; digit >= 0; digit--) {
 		std::vector<T*> tabAux(tabSize);
-		std::vector<unsigned int> counter(RADIX + 1);
+		std::vector<unsigned int> counter(RADIX + 2);
 
 		for (unsigned int i = 0; i < tabSize; ++i) {
 			counter[getByte(*tab[i], digit) + 2]++;
@@ -209,7 +215,6 @@ template<typename T> void LSDRadixSort(std::vector<T>& tab) {
     auto t_start = std::chrono::high_resolution_clock::now(); // Store the start time of the sorting algorithm
 
 	std::size_t tabSize = tab.size();
-	//unsigned int radix = 256;
 	std::size_t maxLength = getMaxLength(tab);
 
 	/// Counting sort
@@ -279,8 +284,6 @@ template<typename T> void MSDRadixSort(std::vector<T*>& tab, std::vector<T*>& ta
 }
 
 template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabAux, int low, int high, int digit) {
-
-	//if (high <= low)	{ return; }
 
 	std::vector<int> counter(RADIX+2);
 
