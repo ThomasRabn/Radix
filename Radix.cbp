@@ -33,7 +33,6 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
-		<Unit filename="sorting.h" />
 		<Unit filename="useful.cpp" />
 		<Unit filename="useful.h" />
 		<Extensions>

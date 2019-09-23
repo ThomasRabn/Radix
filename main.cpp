@@ -1,32 +1,40 @@
-//#include "useful.h"
-#include "sorting.h"
+#include "useful.h"
+#define NUM_SEC std::chrono::duration<double, std::milli>(t_end - t_start).count()/1000
+#define RADIX 256
+#define SORT_THRESHOLD 256
+
 
 int main()
 {
+    /// Creation of both arrays
 	std::vector<unsigned int> tabInts;
+	std::vector<std::string*> tabText;
+
+	/// We load the arrays
+	openFile("files/bible-lines.txt", tabText);
 	openFile("files/ints.txt", tabInts);
 
-    std::vector<std::string*> tabText;
-    openFile("files/bible-lines.txt", tabText);
+	///Choose which array you want to sort
+	auto arr = tabText;
 
     auto t_start = std::chrono::high_resolution_clock::now(); // Store the start time of the sorting algorithm
 
-    MSDRadixSort(tabText);
+    /// Choose which sorting algorithm you want to use
+    //LSDRadixSort(arr);
+    MSDRadixSort(arr);
 
     auto t_end = std::chrono::high_resolution_clock::now(); // Store the end time
 
     /// Print the time of the sort
-	std::cout << "Sorting was : " << std::chrono::duration<double, std::milli>(t_end - t_start).count() / 1000 << " seconds long" << std::endl;
+	std::cout << "Sorting was : " << NUM_SEC << " seconds long" << std::endl;
 
-	for (unsigned int i = 1; i < tabInts.size(); i++) {
-        if (compareValues(tabInts[i], tabInts[i-1])) {            // less is a compare for your data type
+	/// Print an error if the array isn't sorted
+    int verif = verify(arr);
 
-        }
-    }
-
-    /*for(const auto& elem : tabText) {
-        std::cout << *elem << std::endl;
-	}*/
+    /// If this is uncommented and verify() didn't return an error, the array is printed
+    /*if (verif == 0) {
+        print(arr);
+    }*/
 
 	return 0;
 }
