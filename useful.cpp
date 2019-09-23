@@ -16,18 +16,6 @@ void openFile(std::string nom, std::vector<std::string*>& tab) {
 	}
 }
 
-void openFile(std::string nom, std::vector<std::string>& tab) {
-	std::fstream file{ nom };
-	std::string value;
-	if (!file) { std::cout << "Error : file can't be opened"; }
-
-	else {
-		while (getline(file, value)) {
-			tab.push_back(value);
-		}
-	}
-}
-
 void openFile(std::string nom, std::vector<unsigned int>& tab) {
 	std::fstream file{ nom };
 	std::string temp;
@@ -37,21 +25,6 @@ void openFile(std::string nom, std::vector<unsigned int>& tab) {
 	else {
         while (getline(file, temp)) {
 			value = std::stoul(temp);
-			tab.push_back(value);
-		}
-	}
-}
-
-void openFile(std::string nom, std::vector<unsigned int*>& tab) {
-	std::fstream file{ nom };
-	std::string temp;
-	unsigned int* value;
-	if (!file) { std::cout << "Error : file can't be opened"; }
-
-	else {
-        while (getline(file, temp)) {
-            value = new unsigned int;
-			*value = std::stoul(temp);
 			tab.push_back(value);
 		}
 	}
@@ -66,30 +39,10 @@ short int getByte(unsigned int elem, unsigned int i) {
 	else return -1;
 }
 
-short int getByte(unsigned int* elem, unsigned int i) {
-	if (sizeof(*elem) > i)   { return ((*elem) >> ((3-i)*8)&(255)); }
-	else return -1;
-}
-
-short int getByte(std::string elem, unsigned int i) {
-	if (elem.size() > i)    { return elem[i]; }
-	else return -1;
-}
-
 short int getByte(std::string* elem, unsigned int i) {
 	if ((*elem).size() > i)    { return (*elem)[i]; }
 	else return -1;
 }
-
-/*int get4bits(unsigned int elem, unsigned int i) {
-    if(sizeof(elem)*2 > i)  { return (elem >> ((7-i)*4)&(15)); }
-    else return -1;
-}
-
-int get2bytes(unsigned int elem, unsigned int i) {
-    if(sizeof(elem)/2 > i)  { return (elem >> ((1-i)*16)&(65535)); }
-    else return -1;
-}*/
 ///************************************************************************************************************///
 
 
@@ -99,19 +52,9 @@ std::size_t getMaxLength(std::vector<unsigned int>& tab) {
     return 4;
 }
 
-std::size_t getMaxLength(std::vector<unsigned int*>& tab) {
-    return 4;
-}
-
 std::size_t getMaxLength(std::vector<std::string*>& tab) {
     std::size_t maxLength = 0;
     for (const auto& elem : tab) { if ((*elem).size() > maxLength)     maxLength = (*elem).size(); }
-    return maxLength;
-}
-
-std::size_t getMaxLength(std::vector<std::string>& tab) {
-    std::size_t maxLength = 0;
-    for (const auto& elem : tab) { if (elem.size() > maxLength)     maxLength = elem.size(); }
     return maxLength;
 }
 ///***************************************************///
