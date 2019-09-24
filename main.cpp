@@ -1,5 +1,5 @@
 #include "useful.h"
-#define NUM_SEC std::chrono::duration<double, std::milli>(t_end - t_start).count()/1000
+#define NUM_mSEC std::chrono::duration<double, std::milli>(t_end - t_start).count()
 #define RADIX 256
 #define SORT_THRESHOLD 256
 
@@ -15,18 +15,19 @@ int main()
 	openFile("files/ints.txt", tabInts);
 
 	///Choose which array you want to sort
-	auto arr = tabText;
+	auto arr = tabInts;
 
     auto t_start = std::chrono::high_resolution_clock::now(); // Store the start time of the sorting algorithm
 
     /// Choose which sorting algorithm you want to use
     //LSDRadixSort(arr);
     MSDRadixSort(arr);
+    //std::sort(arr.begin(), arr.end(), Compare());
 
     auto t_end = std::chrono::high_resolution_clock::now(); // Store the end time
 
     /// Print the time of the sort
-	std::cout << "Sorting was : " << NUM_SEC << " seconds long" << std::endl;
+	std::cout << std::endl << "       Sorting integers with MSD sort was : " << NUM_mSEC << " ms long" << std::endl;
 
 	/// Print an error if the array isn't sorted
     int verif = verify(arr);
@@ -39,6 +40,7 @@ int main()
 	return 0;
 }
 
+///**** LSD Radix Sort ****///
 ///**** Takes an array and uses the LSD Radix Sort to put it in order ****///
 template<typename T> void LSDRadixSort(std::vector<T>& tab) {
 
