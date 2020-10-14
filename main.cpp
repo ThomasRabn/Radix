@@ -80,7 +80,7 @@ template<typename T> void MSDRadixSort(std::vector<T>& tab) {
 }
 
 template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabAux, int low, int high, int digit) {
-
+    /// If the two bounds are too close to each other we sort it using the std::sort function
     if ((high-low) < SORT_THRESHOLD) {
         std::sort(tab.begin()+low, tab.begin()+high, Compare());
     }
@@ -103,8 +103,9 @@ template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabA
             tab[i] = tabAux[i-low];
         }
 
-        for(int r = 0; r < RADIX; ++r) {
-            if(low+counter[r] < low+counter[r+1])    MSDRadixSort(tab, tabAux, low+counter[r], low+counter[r+1], digit+1);
+        for(int r = 0; r < RADIX+1; ++r) {
+            /// if there is many times the same letter we launch a sort for all of them
+            if(counter[r] < counter[r+1])    MSDRadixSort(tab, tabAux, low+counter[r], low+counter[r+1], digit+1);
         }
     }
 }
